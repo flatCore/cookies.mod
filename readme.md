@@ -3,7 +3,7 @@
 With this addon you can display a cookie consent banner on your website.
 
 
-### Installing publisher.mod
+### Installing cookies.mod
 
 1. Download the latest Version from flatCore.org or github.com
 2. Unzip the file and upload the folder __cookies.mod__ into the directory *modules*.
@@ -11,7 +11,7 @@ With this addon you can display a cookie consent banner on your website.
 
 #### Preferences
 
-If you want to Style the Cookie-Banner by yourself, check the Option *Ignore inline CSS* and you can make use of your own Styles. If you're looking for the default CSS: *cookies.mod/global/styles.css*
+If you want to Style the Cookie-Banner by yourself, check the Option *Ignore inline CSS* and you can make use of your own Styles. If you're looking for the default CSS: `cookies.mod/global/styles.css`
 
 #### Requirement
 
