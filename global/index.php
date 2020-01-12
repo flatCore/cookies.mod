@@ -63,9 +63,9 @@ if(is_numeric($_COOKIE['cookie_consent'])) {
 	$cookie_box .= '<p class="mb-0"><a href="'.$get_cookies_prefs['url_privacy_policy'].'">'.$cookies_lang['label_more_info'].' '.$get_cookies_prefs['url_privacy_policy'].'</a></p>';
 	$cookie_box .= '<form action="'.$cookie_form_action.'" method="POST">';
 	$cookie_box .= $cookie_table;
-	$cookie_box .= '<div class="btn-group d-flex">';
-	$cookie_box .= '<button type="submit" class="btn btn-outline-success btn-sm w-75" name="cookies_save">'.$cookies_lang['btn_save'].'</button> ';
-	$cookie_box .= '<button type="submit" class="btn btn-success btn-sm w-100" name="cookies_accept_all">'.$cookies_lang['btn_accept_all'].'</button>';
+	$cookie_box .= '<div class="cookie-box-actions">';
+	$cookie_box .= '<button type="submit" class="btn btn-outline-success btn-sm" name="cookies_save">'.$cookies_lang['btn_save'].'</button> ';
+	$cookie_box .= '<button type="submit" class="btn btn-success btn-sm" name="cookies_accept_all">'.$cookies_lang['btn_accept_all'].'</button>';
 	$cookie_box .= '</div>';
 	$cookie_box .= '</form>';
 	$cookie_box .= '</div>';	
