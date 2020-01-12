@@ -17,6 +17,8 @@ $cookies_lang['label_more_info'] = 'Weitere Informationen: ';
 $cookies_lang['label_cookie_lifetime'] = 'Gültigkeit (Sekunden) ';
 $cookies_lang['label_new_cookie'] = 'Neuer Cookie ...';
 $cookies_lang['label_ignore_inline_css'] = 'Inline CSS ignorieren';
+$cookies_lang['label_cookie_accepted'] = 'Cookie Akzeptiert';
+$cookies_lang['label_cookie_declined'] = 'Cookie Abgelehnt';
 
 $cookies_lang['url_privacy_policy'] = 'URL zur Datenschutzseite';
 $cookies_lang['cookie_banner_intro'] = 'Cookie Banner Intro';

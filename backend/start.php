@@ -72,6 +72,8 @@ if(isset($_POST['save_cookie'])) {
 							text = :text,
 							code_head = :code_head,
 							code_body = :code_body,
+							code_head_default = :code_head_default,
+							code_body_default = :code_body_default,
 							status = :status,
 							mandatory = :mandatory,
 							hash = :hash,
@@ -89,6 +91,8 @@ if(isset($_POST['save_cookie'])) {
 		$sth->bindParam(':text', $_POST['cookie_text'], PDO::PARAM_STR);
 		$sth->bindParam(':code_head', $_POST['cookie_code_head'], PDO::PARAM_STR);
 		$sth->bindParam(':code_body', $_POST['cookie_code_body'], PDO::PARAM_STR);
+		$sth->bindParam(':code_head_default', $_POST['cookie_code_head_default'], PDO::PARAM_STR);
+		$sth->bindParam(':code_body_default', $_POST['cookie_code_body_default'], PDO::PARAM_STR);
 		$sth->bindParam(':status', $_POST['cookie_status'], PDO::PARAM_STR);
 		$sth->bindParam(':mandatory', $_POST['cookie_mandatory'], PDO::PARAM_STR);
 		$sth->bindParam(':priority', $_POST['cookie_priority'], PDO::PARAM_INT);
@@ -128,6 +132,8 @@ if($entry_id != '') {
 	$cookie_text = $get_cookie['text'];
 	$cookie_code_head = $get_cookie['code_head'];
 	$cookie_code_body = $get_cookie['code_body'];
+	$cookie_code_head_default = $get_cookie['code_head_default'];
+	$cookie_code_body_default = $get_cookie['code_body_default'];
 	$cookie_id = $get_cookie['id'];
 	$cookie_status = $get_cookie['status'];
 	$cookie_mandatory = $get_cookie['mandatory'];
@@ -262,6 +268,13 @@ echo '</div>';
 echo '</div>';
 echo '</div>';
 
+
+echo '<div class="row">';
+echo '<div class="col-md-6">';
+
+/* code injects if cookies acceppted */
+echo '<fieldset>';
+echo '<legend class="text-success">'.$cookies_lang['label_cookie_accepted'].'</legend>';
 echo '<div class="card">';
 echo '<div class="card-header">';
 
@@ -276,23 +289,64 @@ echo '<div class="tab-content" id="TabContent">';
 echo'<div class="tab-pane fade show active" id="code_head" role="tabpanel">';
 
 echo '<div class="form-group">';
-echo '<textarea class="aceEditor_css form-control" id="code_head" name="cookie_code_head">'.$cookie_code_head.'</textarea>';
-echo '<div id="CSSeditor"></div>';
+echo '<textarea class="code_editor" id="code_head" name="cookie_code_head">'.$cookie_code_head.'</textarea>';
 echo '</div>';
 
 echo '</div>';
 echo'<div class="tab-pane fade" id="code_body" role="tabpanel">';
 
 echo '<div class="form-group">';
-echo '<textarea class="aceEditor_html form-control" id="code_body" name="cookie_code_body">'.$cookie_code_body.'</textarea>';
-echo '<div id="HTMLeditor"></div>';
+echo '<textarea class="code_editor" id="code_body" name="cookie_code_body">'.$cookie_code_body.'</textarea>';
 echo '</div>';
+
 
 echo '</div>';
 echo '</div>';
 echo '</div>';
 echo '</div>';
+echo '</fieldset>';
 
+echo '</div>';
+echo '<div class="col-md-6">';
+
+
+/* code injects if cookies declined */
+echo '<fieldset>';
+echo '<legend>'.$cookies_lang['label_cookie_declined'].'</legend>';
+echo '<div class="card">';
+echo '<div class="card-header">';
+
+echo '<ul class="nav nav-tabs card-header-tabs" role="tablist">';
+echo '<li class="nav-item"><a class="nav-link active" data-target="#code_head_default" data-toggle="tab" href="#" role="tab">Code &lt;head&gt;</a></li>';
+echo '<li class="nav-item"><a class="nav-link" data-target="#code_body_default" data-toggle="tab" href="#" role="tab">Code &lt;body&gt;</a></li>';
+
+echo '</div>';
+echo '<div class="card-body">';
+
+echo '<div class="tab-content" id="TabContent">';
+echo'<div class="tab-pane fade show active" id="code_head_default" role="tabpanel">';
+
+echo '<div class="form-group">';
+echo '<textarea class="code_editor" id="code_head_default" name="cookie_code_head_default">'.$cookie_code_head_default.'</textarea>';
+echo '</div>';
+
+echo '</div>';
+echo'<div class="tab-pane fade" id="code_body_default" role="tabpanel">';
+
+echo '<div class="form-group">';
+echo '<textarea class="code_editor" id="code_body" name="cookie_code_body_default">'.$cookie_code_body_default.'</textarea>';
+echo '<div class="ace_code_editor"></div>';
+echo '</div>';
+
+
+echo '</div>';
+echo '</div>';
+echo '</div>';
+echo '</div>';
+echo '</fieldset>';
+
+echo '</div>';
+echo '</div>';
 
 
 echo '<input type="hidden" name="csrf_token" value="'.$_SESSION['token'].'">';

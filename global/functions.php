@@ -102,7 +102,7 @@ function cookies_get_code_injections() {
 	$mod_db = './content/SQLite/cookies.sqlite3';
 	$dbh = new PDO("sqlite:$mod_db");
 	$status = 'active';
-	$sql = 'SELECT hash, title, code_head, code_body FROM entries WHERE status = :status ';
+	$sql = 'SELECT hash, title, code_head, code_body, code_head_default, code_body_default FROM entries WHERE status = :status ';
 	$sth = $dbh->prepare($sql);
 	$sth->bindParam(':status', $status, PDO::PARAM_STR);	
 	$sth->execute();

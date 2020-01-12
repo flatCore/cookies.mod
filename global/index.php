@@ -79,12 +79,21 @@ foreach($get_cookies as $k => $v) {
 	
 	$cookie_hash = $get_cookies[$k]['hash'];
 	$user_cookie = $_COOKIE[$cookie_hash];
+
+	if($get_cookies[$k]['mandatory'] == 'yes') {
+		$cookies_head_code .=  $cookie_codes[$cookie_hash][0]['code_head'];
+		$cookies_body_code .=  $cookie_codes[$cookie_hash][0]['code_body'];
+		continue;		
+	}
 	
 	if(is_numeric($user_cookie)) {
 		/* hell yeah, inject the code from code_head and code_body */		
 		$cookies_head_code .=  $cookie_codes[$cookie_hash][0]['code_head'];
-		$cookies_body_code .=  $cookie_codes[$cookie_hash][0]['code_body'];
-		
+		$cookies_body_code .=  $cookie_codes[$cookie_hash][0]['code_body'];	
+	} else {
+		/* use default codes as fallback */		
+		$cookies_head_code .=  $cookie_codes[$cookie_hash][0]['code_head_default'];
+		$cookies_body_code .=  $cookie_codes[$cookie_hash][0]['code_body_default'];		
 	}
 	
 }
