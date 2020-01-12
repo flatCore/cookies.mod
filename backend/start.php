@@ -58,9 +58,9 @@ if(isset($_POST['save_cookie'])) {
 	if($mode == "new")	{
 		
 		$sql = "INSERT INTO entries (
-			id, title, teaser, text, code_head, code_body, status, mandatory, hash
+			id, title, teaser, text, code_head, code_body, code_head_default, code_body_default, status, mandatory, hash, priority
 				) VALUES (
-			NULL, :title, :teaser, :text, :code_head, :code_body, :status, :mandatory, :hash		) ";
+			NULL, :title, :teaser, :text, :code_head, :code_body, :code_head_default, :code_body_default, :status, :mandatory, :hash, :priority		) ";
 		
 		$sth = $dbh->prepare($sql);
 		
