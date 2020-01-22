@@ -44,7 +44,7 @@ if($cookie_lifetime == '') {
 	$cookie_lifetime = 0;
 }
 
-
+echo $btn_help_text;
 echo '<h3>'.$mod_name.' '.$mod_version.' <small>| '.$cookies_lang['nav_preferences'].'</small></h3>';
 
 

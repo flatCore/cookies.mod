@@ -12,9 +12,8 @@ if(!defined('FC_INC_DIR')) {
 include '../modules/cookies.mod/install/installer.php';
 include __DIR__.'/include.php';
 
+echo $btn_help_text;
 echo '<h3>'.$mod_name.' '.$mod_version.' <small>| '.$mod['description'].'</small></h3>';
-
-
 
 
 if($mode == '') {
