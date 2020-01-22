@@ -10,8 +10,9 @@ function cookies_get_entries() {
 	
 	global $mod_db;
 	$status = '';
-	
-	
+	global $languagePack;
+	global $fc_db_content;
+	global $fc_db_content;
 	
 	if(FC_SOURCE == 'frontend') {
 		$mod_db = './content/SQLite/cookies.sqlite3';
@@ -23,12 +24,47 @@ function cookies_get_entries() {
 	} else {
 		$dbh = new PDO("sqlite:$mod_db");
 		$sql = 'SELECT * FROM entries ORDER BY priority DESC';
-		$sth = $dbh->prepare($sql);		
+		$sth = $dbh->prepare($sql);
+		$fc_db_content = '../'.$fc_db_content;
 	}
 
 
 	$sth->execute();
 	$entries = $sth->fetchAll(PDO::FETCH_ASSOC);
+	
+	$cnt_entries = count($entries);
+	
+	for($i=0;$i<$cnt_entries;$i++) {
+		if($entries[$i]['snippet_name'] != 'no_snippet') {
+			
+			/* get the snippet's contents and overwrite title, teaser and text  */
+			
+			$dbh = new PDO("sqlite:".$fc_db_content);
+			$sql = "SELECT * FROM fc_textlib WHERE textlib_name LIKE :name AND textlib_lang LIKE :lang";
+			$sth = $dbh->prepare($sql);
+			$sth->bindParam(':name', $entries[$i]['snippet_name'], PDO::PARAM_STR);
+			$sth->bindParam(':lang', $languagePack, PDO::PARAM_STR);
+			$sth->execute();
+			$snippet = $sth->fetch(PDO::FETCH_ASSOC);
+			$dbh = null;
+			
+			$separator = '<hr>';
+			$pos = stripos($snippet['textlib_content'], $separator);
+			if($pos !== false) {
+				$entries[$i]['teaser'] = substr($snippet['textlib_content'], 0,$pos);
+				$entries[$i]['text'] = substr($snippet['textlib_content'], $pos);
+			
+			} else {
+				$entries[$i]['teaser'] = $snippet['textlib_content'];
+				$entries[$i]['text'] = '';
+			}
+			
+			$entries[$i]['title'] = $snippet['textlib_title'];
+			$entries[$i]['teaser'] = strip_tags($entries[$i]['teaser'], '<br><a>');
+				
+		}
+	}
+	
 	
 	$dbh = null;
 	
@@ -77,10 +113,13 @@ function cookies_print_table($get_cookies) {
 			$disabled = 'disabled';
 		}
 		
-		$collapse  = '<a class="" data-toggle="collapse" href="#cookiCollapse'.$i.'" role="button" aria-expanded="false" aria-controls="collapseExample">[?]</a>';
-		$collapse .= '<div class="collapse pt-2" id="cookiCollapse'.$i.'">';
-		$collapse .= $get_cookies[$i]['text'];
-		$collapse .= '</div>';
+		$collapse = '';
+		if($get_cookies[$i]['text'] != '') {
+			$collapse  = '<a class="" data-toggle="collapse" href="#cookiCollapse'.$i.'" role="button" aria-expanded="false" aria-controls="collapseExample">[?]</a>';
+			$collapse .= '<div class="collapse pt-2" id="cookiCollapse'.$i.'">';
+			$collapse .= $get_cookies[$i]['text'];
+			$collapse .= '</div>';
+		}
 		
 		$cookie_table .= '<tr>';
 		$cookie_table .= '<td><strong>'.$get_cookies[$i]['title'].'</strong><br>'.$get_cookies[$i]['teaser'].' '.$collapse.'</td>';

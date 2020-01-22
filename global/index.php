@@ -12,9 +12,13 @@
  * to inject th cookie code
  */
 
-include 'functions.php';
 
+include 'functions.php';
 include 'modules/cookies.mod/lang/en/dict.php';
+
+if(FC_SOURCE == 'frontend') {
+	$languagePack = $page_contents['page_language'];
+}
 
 if(is_file('modules/cookies.mod/lang/'.$languagePack.'/dict.php')) {
 	include 'modules/cookies.mod/lang/'.$languagePack.'/dict.php';
@@ -23,6 +27,21 @@ if(is_file('modules/cookies.mod/lang/'.$languagePack.'/dict.php')) {
 $get_cookies = cookies_get_entries();
 $get_cookies_prefs = cookies_get_preferences();
 $cookie_lifetime = $get_cookies_prefs['cookie_lifetime'];
+$cookie_banner_intro = $get_cookies_prefs['cookie_banner_intro'];
+
+if($get_cookies_prefs['cookie_banner_intro_snippet'] != 'no_snippet') {
+	/* get the intro from snippets an overwrite $cookie_banner_intro */
+	$dbh = new PDO("sqlite:".$fc_db_content);
+	$sql = "SELECT * FROM fc_textlib WHERE textlib_name LIKE :name AND textlib_lang LIKE :lang";
+	$sth = $dbh->prepare($sql);
+	$sth->bindParam(':name', $get_cookies_prefs['cookie_banner_intro_snippet'], PDO::PARAM_STR);
+	$sth->bindParam(':lang', $languagePack, PDO::PARAM_STR);
+	$sth->execute();
+	$snippet = $sth->fetch(PDO::FETCH_ASSOC);
+	$dbh = null;
+	
+	$cookie_banner_intro = $snippet['textlib_content'];
+}
 
 $cookie_styles = '';
 if($get_cookies_prefs['ignore_inline_css'] != 'ignore') {
@@ -59,8 +78,11 @@ if(is_numeric($_COOKIE['cookie_consent'])) {
 	$cookie_box = '';
 } else {
 	$cookie_box = '<div class="cookie-box">';
-	$cookie_box .= '<p class="mb-0">'.$get_cookies_prefs['cookie_banner_intro'].'</p>';
-	$cookie_box .= '<p class="mb-0"><a href="'.$get_cookies_prefs['url_privacy_policy'].'">'.$cookies_lang['label_more_info'].' '.$get_cookies_prefs['url_privacy_policy'].'</a></p>';
+	$cookie_box .= '<p class="mb-0">'.$cookie_banner_intro.'</p>';
+	if($get_cookies_prefs['url_privacy_policy'] != '') {
+		$cookie_box .= '<p class="mb-0"><a href="'.$get_cookies_prefs['url_privacy_policy'].'">'.$cookies_lang['label_more_info'].' '.$get_cookies_prefs['url_privacy_policy'].'</a></p>';
+	}
+	
 	$cookie_box .= '<form action="'.$cookie_form_action.'" method="POST">';
 	$cookie_box .= $cookie_table;
 	$cookie_box .= '<div class="cookie-box-actions">';

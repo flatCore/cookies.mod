@@ -14,6 +14,7 @@ $cols = array(
 	"status"  => 'VARCHAR',
 	"url_privacy_policy" => 'VARCHAR',
 	"cookie_banner_intro" => 'VARCHAR',
+	"cookie_banner_intro_snippet" => 'VARCHAR',
 	"cookie_lifetime" => 'VARCHAR',
 	"ignore_inline_css" => 'VARCHAR',
 	"version" => 'VARCHAR'

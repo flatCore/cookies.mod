@@ -18,13 +18,15 @@ if(isset($_POST['save_cookie_prefs'])) {
 					SET url_privacy_policy = :url_privacy_policy,
 							cookie_banner_intro = :cookie_banner_intro,
 							cookie_lifetime = :cookie_lifetime,
-							ignore_inline_css = :ignore_inline_css
+							ignore_inline_css = :ignore_inline_css,
+							cookie_banner_intro_snippet = :cookie_banner_intro_snippet
 					WHERE status = 'active' ";
 	$sth = $dbh->prepare($sql);
 	$sth->bindParam(':url_privacy_policy', $_POST['url_privacy_policy'], PDO::PARAM_STR);
 	$sth->bindParam(':cookie_banner_intro', $_POST['cookie_banner_intro'], PDO::PARAM_STR);
 	$sth->bindParam(':cookie_lifetime', $_POST['cookie_lifetime'], PDO::PARAM_STR);
 	$sth->bindParam(':ignore_inline_css', $_POST['ignore_inline_css'], PDO::PARAM_STR);
+	$sth->bindParam(':cookie_banner_intro_snippet', $_POST['cookie_snippet'], PDO::PARAM_STR);
 	$cnt_changes = $sth->execute();
 	$dbh = null;
 }
@@ -36,6 +38,7 @@ $url_privacy_policy = $cookie_prefs['url_privacy_policy'];
 $cookie_banner_intro = $cookie_prefs['cookie_banner_intro'];
 $cookie_lifetime = $cookie_prefs['cookie_lifetime'];
 $ignore_inline_css = $cookie_prefs['ignore_inline_css'];
+$intro_snippet = $cookie_prefs['cookie_banner_intro_snippet'];
 
 if($cookie_lifetime == '') {
 	$cookie_lifetime = 0;
@@ -53,9 +56,41 @@ echo '<label>'.$cookies_lang['url_privacy_policy'].'</label>';
 echo '<input class="form-control" name="url_privacy_policy" type="text" value="'.$url_privacy_policy.'">';
 echo '</div>';
 
-echo '<div class="form-group">';
-echo '<label>'.$cookies_lang['cookie_banner_intro'].'</label>';
-echo '<textarea class="form-control" name="cookie_banner_intro" rows="6">'.$cookie_banner_intro.'</textarea>';
+echo '<div class="row">';
+echo '<div class="col-md-6">';
+
+echo '<fieldset>';
+echo '<legend>'.$cookies_lang['cookie_banner_intro'].'</legend>';
+echo '<textarea class="form-control" name="cookie_banner_intro" rows="3">'.$cookie_banner_intro.'</textarea>';
+echo '</fieldset>';
+
+echo '</div>';
+echo '<div class="col-md-6">';
+
+echo '<fieldset>';
+echo '<legend>'.$cookies_lang['label_alternative_snippet'].'</legend>';
+
+echo '<select class="form-control custom-select" name="cookie_snippet">';
+echo '<option value="no_snippet">'.$cookies_lang['no_snippet'].'</option>';
+$dbh = new PDO("sqlite:".CONTENT_DB);
+$sql = "SELECT * FROM fc_textlib WHERE textlib_name LIKE 'cookie%' ORDER BY textlib_name ASC";
+foreach ($dbh->query($sql) as $row) {
+	$snippets_list[] = $row;
+}
+$dbh = null;
+foreach($snippets_list as $snippet) {
+	$selected = "";
+	if($snippet['textlib_name'] == $intro_snippet) {
+		$selected = 'selected';
+	}
+	echo '<option '.$selected.' value='.$snippet['textlib_name'].'>'.$snippet['textlib_name'].'</option>';
+}
+echo '</select>';
+echo '<span class="form-text text-muted">'.$cookies_lang['snippet_help_text'].'</span>';
+
+echo '</fieldset>';
+
+echo '</div>';
 echo '</div>';
 
 echo '<div class="form-group">';

@@ -10,6 +10,7 @@ $cookies_lang['cookie_teaser'] = 'Teaser';
 $cookies_lang['cookie_text'] = 'Text';
 $cookies_lang['cookie_code'] = 'Code';
 $cookies_lang['cookie_priority'] = 'Priority';
+$cookies_lang['label_alternative_snippet'] = 'Choose Snippet ...';
 
 $cookies_lang['label_active'] = 'Active';
 $cookies_lang['label_mandatory'] = 'Mandatory';
@@ -25,5 +26,8 @@ $cookies_lang['cookie_banner_intro'] = 'Cookie Banner Intro';
 
 $cookies_lang['btn_save'] = 'Save';
 $cookies_lang['btn_accept_all'] = 'Accept All';
+
+$cookies_lang['snippet_help_text'] = 'If you select a snippet, the Title, Teaser and Text will be overwritten';
+$cookies_lang['no_snippet'] = 'Do not use a snippet';
 
 ?>

@@ -58,9 +58,9 @@ if(isset($_POST['save_cookie'])) {
 	if($mode == "new")	{
 		
 		$sql = "INSERT INTO entries (
-			id, title, teaser, text, code_head, code_body, code_head_default, code_body_default, status, mandatory, hash, priority
+			id, title, teaser, text, code_head, code_body, code_head_default, code_body_default, status, mandatory, hash, priority, snippet_name
 				) VALUES (
-			NULL, :title, :teaser, :text, :code_head, :code_body, :code_head_default, :code_body_default, :status, :mandatory, :hash, :priority		) ";
+			NULL, :title, :teaser, :text, :code_head, :code_body, :code_head_default, :code_body_default, :status, :mandatory, :hash, :priority, :snippet_name		) ";
 		
 		$sth = $dbh->prepare($sql);
 		
@@ -77,7 +77,8 @@ if(isset($_POST['save_cookie'])) {
 							status = :status,
 							mandatory = :mandatory,
 							hash = :hash,
-							priority = :priority
+							priority = :priority,
+							snippet_name = :snippet_name
 							WHERE id = :id ";
 		
 		$sth = $dbh->prepare($sql);
@@ -97,6 +98,7 @@ if(isset($_POST['save_cookie'])) {
 		$sth->bindParam(':mandatory', $_POST['cookie_mandatory'], PDO::PARAM_STR);
 		$sth->bindParam(':priority', $_POST['cookie_priority'], PDO::PARAM_INT);
 		$sth->bindParam(':hash', $cookie_hash, PDO::PARAM_STR);
+		$sth->bindParam(':snippet_name', $_POST['cookie_snippet'], PDO::PARAM_STR);
 		
 		$cnt_changes = $sth->execute();
 		
@@ -138,6 +140,7 @@ if($entry_id != '') {
 	$cookie_status = $get_cookie['status'];
 	$cookie_mandatory = $get_cookie['mandatory'];
 	$cookie_priority = $get_cookie['priority'];
+	$cookie_snippet = $get_cookie['snippet_name'];
 }
 
 
@@ -158,6 +161,7 @@ echo '<tr>';
 echo '<td>ID</td>';
 echo '<td>'.$cookies_lang['cookie_priority'].'</td>';
 echo '<td>'.$cookies_lang['cookie_title'].'</td>';
+echo '<td>Snippet</td>';
 echo '<td>Status</td>';
 echo '<td></td>';
 echo '</tr>';
@@ -173,11 +177,18 @@ for($i=0;$i<$cnt_all_cookies;$i++) {
 	if($all_cookies[$i]['status'] == 'active') {
 		$show_check = '<span class="text-success">'.$icon['check'].'</span>';
 	}
+	
+	$show_snippet = '';
+	if($all_cookies[$i]['snippet_name'] != 'no_snippet') {
+		$show_snippet = $all_cookies[$i]['snippet_name'];
+	}
+	
 		
 	echo '<tr>';
 	echo '<td>'.$all_cookies[$i]['id'].'</td>';
 	echo '<td>'.$all_cookies[$i]['priority'].'</td>';
 	echo '<td><strong>'.$all_cookies[$i]['title'].'</strong><br>'.$all_cookies[$i]['teaser'].'</td>';
+	echo '<td><code>'.$show_snippet.'</code></td>';
 	echo '<td nowrap>'.$show_check.' '.$show_star.'</td>';
 	echo '<td class="text-right" nowrap>';
 	echo '<a href="acp.php?tn=moduls&sub=cookies.mod&a=start&edit_id='.$all_cookies[$i]['id'].'" class="btn btn-fc text-success">'.$icon['edit'].'</a> ';
@@ -190,7 +201,7 @@ echo '</table>';
 echo '</fieldset>';
 
 
-
+echo '<hr class="shadow">';
 
 /* form - edit cookies */
 
@@ -268,6 +279,29 @@ echo '</div>';
 echo '</div>';
 echo '</div>';
 
+echo '<fieldset>';
+echo '<legend>'.$cookies_lang['label_alternative_snippet'].'</legend>';
+
+echo '<select class="form-control custom-select" name="cookie_snippet">';
+echo '<option value="no_snippet">'.$cookies_lang['no_snippet'].'</option>';
+$dbh = new PDO("sqlite:".CONTENT_DB);
+$sql = "SELECT * FROM fc_textlib WHERE textlib_name LIKE 'cookie%' ORDER BY textlib_name ASC";
+foreach ($dbh->query($sql) as $row) {
+	$snippets_list[] = $row;
+}
+$dbh = null;
+foreach($snippets_list as $snippet) {
+	$selected = "";
+	if($snippet['textlib_name'] == $cookie_snippet) {
+		$selected = 'selected';
+	}
+	echo '<option '.$selected.' value='.$snippet['textlib_name'].'>'.$snippet['textlib_name'].'</option>';
+}
+echo '</select>';
+echo '<span class="form-text text-muted">'.$cookies_lang['snippet_help_text'].'</span>';
+
+echo '</fieldset>';
+
 
 echo '<div class="row">';
 echo '<div class="col-md-6">';
@@ -312,7 +346,7 @@ echo '<div class="col-md-6">';
 
 /* code injects if cookies declined */
 echo '<fieldset>';
-echo '<legend>'.$cookies_lang['label_cookie_declined'].'</legend>';
+echo '<legend class="text-danger">'.$cookies_lang['label_cookie_declined'].'</legend>';
 echo '<div class="card">';
 echo '<div class="card-header">';
 
@@ -351,12 +385,14 @@ echo '</div>';
 
 echo '<input type="hidden" name="csrf_token" value="'.$_SESSION['token'].'">';
 
+echo '<div class="well text-right">';
 if($mode == 'edit') {
 	echo '<input class="btn btn-success" type="submit" name="save_cookie" value="'.$lang['update'].'">';
 	echo '<input type="hidden" name="edit_id" value="'.$cookie_id.'">';
 } else {
 	echo '<input class="btn btn-success" type="submit" name="save_cookie" value="'.$lang['save'].'">';
 }
+echo '</div>';
 
 
 echo '</form>';

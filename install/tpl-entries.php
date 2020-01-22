@@ -28,6 +28,7 @@ $cols = array(
 	"status" => 'VARCHAR', /* active|NULL */
 	"mandatory" => 'VARCHAR', /* yes|no */
 	"lang" => 'VARCHAR',
+	"snippet_name" => 'VARCHAR',
 	"priority" => 'INTEGER'
 	);
  

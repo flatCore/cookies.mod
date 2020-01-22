@@ -10,6 +10,7 @@ $cookies_lang['cookie_teaser'] = 'Einleitung';
 $cookies_lang['cookie_text'] = 'Text';
 $cookies_lang['cookie_code'] = 'Code';
 $cookies_lang['cookie_priority'] = 'Priorität';
+$cookies_lang['label_alternative_snippet'] = 'Textvorlage auswählen ...';
 
 $cookies_lang['label_active'] = 'Aktiv';
 $cookies_lang['label_mandatory'] = 'Pflicht';
@@ -25,5 +26,8 @@ $cookies_lang['cookie_banner_intro'] = 'Cookie Banner Intro';
 
 $cookies_lang['btn_save'] = 'Speichern';
 $cookies_lang['btn_accept_all'] = 'Alle akzeptieren';
+
+$cookies_lang['snippet_help_text'] = 'Wenn Du ein Snippet auswählst, wird Titel, Einleitung und Text damit überschrieben.';
+$cookies_lang['no_snippet'] = 'Kein Snippet verwenden';
 
 ?>
