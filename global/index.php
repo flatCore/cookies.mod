@@ -55,17 +55,17 @@ $time = time();
 /* save individual cookies */
 if(isset($_POST['cookies_save'])) {
 	foreach($_POST['set_cookies'] as $set_cookie) {
-		setcookie("$set_cookie","$time",$time+$cookie_lifetime);
+		setcookie("$set_cookie","$time",$time+$cookie_lifetime,'/');
 	}
-	setcookie("cookie_consent","$time",$time+$cookie_lifetime);
+	setcookie("cookie_consent","$time",$time+$cookie_lifetime,'/');
 }
 
 /* save all cookies - yeah */
 if(isset($_POST['cookies_accept_all'])) {
 	foreach($get_cookies as $k => $v) {
-		setcookie($get_cookies[$k]['hash'],"$time",$time+$cookie_lifetime);
+		setcookie($get_cookies[$k]['hash'],"$time",$time+$cookie_lifetime,'/');
 	}
-	setcookie("cookie_consent","$time",$time+$cookie_lifetime);
+	setcookie("cookie_consent","$time",$time+$cookie_lifetime,'/');
 }
 
 $cookie_table = cookies_print_table($get_cookies);
