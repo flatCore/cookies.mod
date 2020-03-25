@@ -33,23 +33,3 @@ $(function() {
 
 });
 </script>
-<?php
-
-
-		$addon_id = 'addonIDcookies';
-		$modal_template_file = file_get_contents("templates/bs-modal.tpl");
-		$btn_help_text = '<button type="button" class="btn btn-sm btn-fc float-right" data-toggle="modal" data-target="#'.$addon_id.'">'.$icon['question'].'</button>';
-		
-		$modal_body_text = file_get_contents('../modules/cookies.mod/readme.md');
-		$Parsedown = new Parsedown();
-		$modal_body = $Parsedown->text($modal_body_text);
-		
-		$modal = $modal_template_file;
-		$modal = str_replace('{modalID}', $addon_id, $modal);
-		$modal = str_replace('{modalTitle}', $mod['name'], $modal);
-		$modal = str_replace('{modalBody}', $modal_body, $modal);
-		echo $modal;
-
-
-
-?>
