@@ -25,7 +25,7 @@ $cookies_lang['url_privacy_policy'] = 'URL to your Privacy Policy';
 $cookies_lang['cookie_banner_intro'] = 'Cookie Banner Intro';
 
 $cookies_lang['btn_save'] = 'Save';
-$cookies_lang['btn_accept_all'] = 'Accept All';
+$cookies_lang['btn_accept_all'] = 'Accept All (recommended)';
 
 $cookies_lang['snippet_help_text'] = 'If you select a snippet, the Title, Teaser and Text will be overwritten';
 $cookies_lang['no_snippet'] = 'Do not use a snippet';

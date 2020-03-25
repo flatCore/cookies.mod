@@ -25,7 +25,7 @@ $cookies_lang['url_privacy_policy'] = 'URL zur Datenschutzseite';
 $cookies_lang['cookie_banner_intro'] = 'Cookie Banner Intro';
 
 $cookies_lang['btn_save'] = 'Speichern';
-$cookies_lang['btn_accept_all'] = 'Alle akzeptieren';
+$cookies_lang['btn_accept_all'] = 'Alle akzeptieren (empfohlen)';
 
 $cookies_lang['snippet_help_text'] = 'Wenn Du ein Snippet auswählst, wird Titel, Einleitung und Text damit überschrieben.';
 $cookies_lang['no_snippet'] = 'Kein Snippet verwenden';
