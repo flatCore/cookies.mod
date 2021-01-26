@@ -283,12 +283,14 @@ echo '<legend>'.$cookies_lang['label_alternative_snippet'].'</legend>';
 
 echo '<select class="form-control custom-select" name="cookie_snippet">';
 echo '<option value="no_snippet">'.$cookies_lang['no_snippet'].'</option>';
-$dbh = new PDO("sqlite:".CONTENT_DB);
-$sql = "SELECT * FROM fc_textlib WHERE textlib_name LIKE 'cookie%' ORDER BY textlib_name ASC";
-foreach ($dbh->query($sql) as $row) {
-	$snippets_list[] = $row;
-}
-$dbh = null;
+
+$snippets_list = $db_content->select("fc_textlib","*",[
+	"AND" => [
+		"textlib_name[~]" => "cookie%",
+		"textlib_lang" => $languagePack	
+	]
+]);
+
 foreach($snippets_list as $snippet) {
 	$selected = "";
 	if($snippet['textlib_name'] == $cookie_snippet) {

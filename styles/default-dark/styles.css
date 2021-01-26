@@ -3,15 +3,46 @@
 	bottom: 0;
 	left: 0;
 	right: 0;
-	padding: 15px;
 	width: 100%;
 	min-height: 150px;
 	max-height: 80%;
 	overflow-y: auto;
-	background: #fff;
-	border: 1px solid #ddd;
 	font-size: 12px;
+	transition: all 0.5s;
+}
+
+.cookie-box.cookie-box-hide {
+	bottom: -585px;
+}
+
+.cookie-box.cookie-box-hide > #toggleCookies {
+	position: fixed;
+	bottom: 0;
+	left: 15px;
+	
+	display: inline-block;
+	padding: 5px 15px;
+	background: #000;
+	color: #fff;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	text-decoration: none;
+}
+
+.cookie-box > #toggleCookies {
+	display: none;
+}
+
+.cookie-box-inner {
+	padding: 15px;
+	background: #111;
+	border: 1px solid #000;
+	color: #fff;
 	box-shadow: 0px 10px 15px rgba(0,0,0,0.5);
+}
+
+.cookie-box-inner table tr td {
+	color: #fff;
 }
 
 div.cookie-box-actions {

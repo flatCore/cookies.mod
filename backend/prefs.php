@@ -1,9 +1,9 @@
 <?php
+error_reporting(E_ALL ^E_NOTICE);
 /**
  * @modul	cookies
  * backend preferences
  */
- 
 
 if(!defined('FC_INC_DIR')) {
 	die("No access");
@@ -19,7 +19,8 @@ if(isset($_POST['save_cookie_prefs'])) {
 							cookie_banner_intro = :cookie_banner_intro,
 							cookie_lifetime = :cookie_lifetime,
 							ignore_inline_css = :ignore_inline_css,
-							cookie_banner_intro_snippet = :cookie_banner_intro_snippet
+							cookie_banner_intro_snippet = :cookie_banner_intro_snippet,
+							cookie_styles = :cookie_styles
 					WHERE status = 'active' ";
 	$sth = $dbh->prepare($sql);
 	$sth->bindParam(':url_privacy_policy', $_POST['url_privacy_policy'], PDO::PARAM_STR);
@@ -27,6 +28,7 @@ if(isset($_POST['save_cookie_prefs'])) {
 	$sth->bindParam(':cookie_lifetime', $_POST['cookie_lifetime'], PDO::PARAM_STR);
 	$sth->bindParam(':ignore_inline_css', $_POST['ignore_inline_css'], PDO::PARAM_STR);
 	$sth->bindParam(':cookie_banner_intro_snippet', $_POST['cookie_snippet'], PDO::PARAM_STR);
+	$sth->bindParam(':cookie_styles', $_POST['cookie_styles'], PDO::PARAM_STR);
 	$cnt_changes = $sth->execute();
 	$dbh = null;
 }
@@ -39,6 +41,7 @@ $cookie_banner_intro = $cookie_prefs['cookie_banner_intro'];
 $cookie_lifetime = $cookie_prefs['cookie_lifetime'];
 $ignore_inline_css = $cookie_prefs['ignore_inline_css'];
 $intro_snippet = $cookie_prefs['cookie_banner_intro_snippet'];
+$cookie_styles = $cookie_prefs['cookie_styles'];
 
 if($cookie_lifetime == '') {
 	$cookie_lifetime = 0;
@@ -72,12 +75,14 @@ echo '<legend>'.$cookies_lang['label_alternative_snippet'].'</legend>';
 
 echo '<select class="form-control custom-select" name="cookie_snippet">';
 echo '<option value="no_snippet">'.$cookies_lang['no_snippet'].'</option>';
-$dbh = new PDO("sqlite:".CONTENT_DB);
-$sql = "SELECT * FROM fc_textlib WHERE textlib_name LIKE 'cookie%' ORDER BY textlib_name ASC";
-foreach ($dbh->query($sql) as $row) {
-	$snippets_list[] = $row;
-}
-$dbh = null;
+
+$snippets_list = $db_content->select("fc_textlib","*",[
+	"AND" => [
+		"textlib_name[~]" => "cookie%",
+		"textlib_lang" => $languagePack	
+	]
+]);
+
 foreach($snippets_list as $snippet) {
 	$selected = "";
 	if($snippet['textlib_name'] == $intro_snippet) {
@@ -107,10 +112,32 @@ if($ignore_inline_css == 'ignore') {
 	$ckeck_ignore_inline_css = '';
 }
 
+echo '<fieldset class="mt-4">';
+echo '<legend>Theme/Styles</legend>';
+
 echo '<div class="form-check">';
 echo '<input id="ignore_inline_css" class="form-check-input" name="ignore_inline_css" type="checkbox" value="ignore" '.$ckeck_ignore_inline_css.'>';
 echo '<label for="ignore_inline_css" class="form-check-label">'.$cookies_lang['label_ignore_inline_css'].'</label>';
 echo '</div>';
+
+$tpl_folders = cookies_list_template_folders();
+
+echo '<div class="form-group">';
+echo '<label>Template</label>';
+
+echo '<select class="form-control custom-select" name="cookie_styles">';
+				
+foreach ($tpl_folders as $tpl) {
+	unset($sel);
+	if($cookie_styles == $tpl) {
+		$sel = "selected";
+	}					
+	echo "<option $sel value='$tpl'>$tpl</option>";
+}
+echo '</select>';
+echo '</div>';
+
+echo '</fieldset>';
 
 
 echo '<hr><div class="well">';
@@ -118,12 +145,9 @@ echo '<input type="hidden" name="csrf_token" value="'.$_SESSION['token'].'">';
 echo '<input class="btn btn-success" type="submit" name="save_cookie_prefs" value="'.$lang['update'].'">';
 echo '</div>';
 
+
 echo '</form>';
 
-function cookies_format_seconds($seconds) {
-    $df = new \DateTime('@0');
-    $dt = new \DateTime("@$seconds");
-    return $df->diff($dt)->format('%a days, %h hours, %i minutes and %s seconds');
-}
+
 
 ?>

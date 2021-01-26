@@ -17,6 +17,7 @@ $cols = array(
 	"cookie_banner_intro_snippet" => 'VARCHAR',
 	"cookie_lifetime" => 'VARCHAR',
 	"ignore_inline_css" => 'VARCHAR',
+	"cookie_styles" => 'VARCHAR',
 	"version" => 'VARCHAR'
   );
   

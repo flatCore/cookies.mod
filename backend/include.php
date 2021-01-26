@@ -10,6 +10,7 @@ if(!defined('FC_INC_DIR')) {
 	die("No access");
 }
 
+include 'functions.php';
 include '../modules/cookies.mod/global/functions.php';
 
 

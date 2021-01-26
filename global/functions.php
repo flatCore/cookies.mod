@@ -2,7 +2,7 @@
 
 /**
  * global cookies.mod functions for backend and frontend
- * please prefix publisher functions 'cookies_'
+ * please prefix functions 'cookies_'
  */
 
 
@@ -11,8 +11,7 @@ function cookies_get_entries() {
 	global $mod_db;
 	$status = '';
 	global $languagePack;
-	global $fc_db_content;
-	global $fc_db_content;
+	global $db_content;
 	
 	if(FC_SOURCE == 'frontend') {
 		$mod_db = './content/SQLite/cookies.sqlite3';
@@ -25,7 +24,6 @@ function cookies_get_entries() {
 		$dbh = new PDO("sqlite:$mod_db");
 		$sql = 'SELECT * FROM entries ORDER BY priority DESC';
 		$sth = $dbh->prepare($sql);
-		$fc_db_content = '../'.$fc_db_content;
 	}
 
 
@@ -36,17 +34,13 @@ function cookies_get_entries() {
 	
 	for($i=0;$i<$cnt_entries;$i++) {
 		if($entries[$i]['snippet_name'] != 'no_snippet') {
-			
-			/* get the snippet's contents and overwrite title, teaser and text  */
-			
-			$dbh = new PDO("sqlite:".$fc_db_content);
-			$sql = "SELECT * FROM fc_textlib WHERE textlib_name LIKE :name AND textlib_lang LIKE :lang";
-			$sth = $dbh->prepare($sql);
-			$sth->bindParam(':name', $entries[$i]['snippet_name'], PDO::PARAM_STR);
-			$sth->bindParam(':lang', $languagePack, PDO::PARAM_STR);
-			$sth->execute();
-			$snippet = $sth->fetch(PDO::FETCH_ASSOC);
-			$dbh = null;
+						
+			$snippet = $db_content->get("fc_textlib","*",[
+				"AND" => [
+					"textlib_name" => $entries[$i]['snippet_name'],
+					"textlib_lang" => $languagePack
+				]
+			]);
 			
 			$separator = '<hr>';
 			$pos = stripos($snippet['textlib_content'], $separator);
@@ -112,6 +106,7 @@ function cookies_print_table($get_cookies) {
 			$checked = 'checked';
 			$disabled = 'disabled';
 		}
+				
 		
 		$collapse = '';
 		if($get_cookies[$i]['text'] != '') {
@@ -119,6 +114,10 @@ function cookies_print_table($get_cookies) {
 			$collapse .= '<div class="collapse pt-2" id="cookiCollapse'.$i.'">';
 			$collapse .= $get_cookies[$i]['text'];
 			$collapse .= '</div>';
+		}
+		
+		if(isset($_COOKIE[$get_cookies[$i]['hash']])) {
+			$checked = 'checked';
 		}
 		
 		$cookie_table .= '<tr>';
@@ -180,7 +179,6 @@ function cookies_get_preferences() {
 	return $prefs;
 	
 }
-
 
 
 ?>

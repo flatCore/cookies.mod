@@ -19,7 +19,7 @@ if(is_file($mod_root.'cookies.mod/lang/'.$languagePack.'/dict.php')) {
 
 $mod = array(
 	"name" => "cookies",
-	"version" => "0.1.0",
+	"version" => "1.1.0",
 	"author" => "Patrick Konstandin",
 	"description" => "Manage your Cookies",
 	"database" => "content/SQLite/cookies.sqlite3"

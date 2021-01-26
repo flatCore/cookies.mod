@@ -1,0 +1,102 @@
+.cookie-box {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	width: 100%;
+	min-height: 150px;
+	max-height: 80%;
+	overflow-y: auto;
+	font-size: 12px;
+	transition: all 0.5s;
+}
+
+.cookie-box.cookie-box-hide {
+	bottom: -585px;
+}
+
+.cookie-box.cookie-box-hide > #toggleCookies {
+	position: fixed;
+	bottom: 0;
+	left: 15px;
+	
+	display: inline-block;
+	padding: 5px 15px;
+	background: #000;
+	color: #fff;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	text-decoration: none;
+}
+
+.cookie-box > #toggleCookies {
+	display: none;
+}
+
+.cookie-box-inner {
+	padding: 15px;
+	background: #fff;
+	border: 1px solid #ddd;
+	box-shadow: 0px 10px 15px rgba(0,0,0,0.5);
+}
+
+div.cookie-box-actions {
+	text-align: right;
+	width: 100%;
+}
+
+.cookie-box input[type=checkbox]{
+	height: 0;
+	width: 0;
+	visibility: hidden;
+}
+
+.cookie-box label {
+	cursor: pointer;
+	text-indent: -9999px;
+	width: 50px;
+	height: 25px;
+	background: grey;
+	display: block;
+	border-radius: 100px;
+	position: relative;
+}
+
+.cookie-box label:after {
+	content: '';
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	width: 15px;
+	height: 15px;
+	background: #fff;
+	border-radius: 15px;
+	transition: 0.2s;
+}
+
+.cookie-box input:checked + label {
+	background: #bada55;
+}
+
+.cookie-box input:checked + label:after {
+	left: calc(100% - 5px);
+	transform: translateX(-100%);
+}
+
+.cookie-box label:active:after {
+	width: 25px;
+}
+
+.cookie-box input:disabled + label {
+	opacity: 0.6;
+}
+
+@media (min-width: 768px) {
+    .cookie-box {
+        left: 15px;
+        bottom: 15px;
+        max-width: 450px;
+        right:auto
+    }
+}
+

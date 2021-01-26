@@ -13,7 +13,7 @@
  */
 
 
-include 'functions.php';
+include 'modules/cookies.mod/global/functions.php';
 include 'modules/cookies.mod/lang/en/dict.php';
 
 if(FC_SOURCE == 'frontend') {
@@ -30,43 +30,36 @@ $cookie_lifetime = $get_cookies_prefs['cookie_lifetime'];
 $cookie_banner_intro = $get_cookies_prefs['cookie_banner_intro'];
 
 if($get_cookies_prefs['cookie_banner_intro_snippet'] != 'no_snippet') {
-	/* get the intro from snippets an overwrite $cookie_banner_intro */
-	$dbh = new PDO("sqlite:".$fc_db_content);
-	$sql = "SELECT * FROM fc_textlib WHERE textlib_name LIKE :name AND textlib_lang LIKE :lang";
-	$sth = $dbh->prepare($sql);
-	$sth->bindParam(':name', $get_cookies_prefs['cookie_banner_intro_snippet'], PDO::PARAM_STR);
-	$sth->bindParam(':lang', $languagePack, PDO::PARAM_STR);
-	$sth->execute();
-	$snippet = $sth->fetch(PDO::FETCH_ASSOC);
-	$dbh = null;
+	$snippet = $db_content->get("fc_textlib","*",[
+		"AND" => [
+			"textlib_name" => $get_cookies_prefs['cookie_banner_intro_snippet'],
+			"textlib_lang" => $languagePack
+		]
+	]);
 	
 	$cookie_banner_intro = $snippet['textlib_content'];
 }
 
+$cookie_styles_dir = $get_cookies_prefs['cookie_styles']; /* tpl folder for cookies */
+
 $cookie_styles = '';
 if($get_cookies_prefs['ignore_inline_css'] != 'ignore') {
-	$cookie_styles = '<style type="text/css">'.file_get_contents('modules/cookies.mod/global/styles.css').'</style>';
+	$cookie_styles = '<style type="text/css">'.file_get_contents('modules/cookies.mod/styles/'.$cookie_styles_dir.'/styles.css').'</style>';
 }
 
 $cookie_script = file_get_contents('modules/cookies.mod/global/cookie.js');
+
+if(is_file('modules/cookies.mod/styles/'.$cookie_styles_dir.'/cookie-alert.tpl')) {
+	$cookie_alert = file_get_contents('modules/cookies.mod/styles/'.$cookie_styles_dir.'/cookie-alert.tpl');
+} else {
+	$cookie_alert = file_get_contents('modules/cookies.mod/styles/default/cookie-alert.tpl');
+}
+
+
+
 $cookies_test = print_r($get_cookies,true);
 
 $time = time();
-/* save individual cookies */
-if(isset($_POST['cookies_save'])) {
-	foreach($_POST['set_cookies'] as $set_cookie) {
-		setcookie("$set_cookie","$time",$time+$cookie_lifetime,'/');
-	}
-	setcookie("cookie_consent","$time",$time+$cookie_lifetime,'/');
-}
-
-/* save all cookies - yeah */
-if(isset($_POST['cookies_accept_all'])) {
-	foreach($get_cookies as $k => $v) {
-		setcookie($get_cookies[$k]['hash'],"$time",$time+$cookie_lifetime,'/');
-	}
-	setcookie("cookie_consent","$time",$time+$cookie_lifetime,'/');
-}
 
 $cookie_table = cookies_print_table($get_cookies);
 
@@ -74,25 +67,24 @@ $cookie_table = cookies_print_table($get_cookies);
 $cookie_form_action = '/'.$fct_slug.$mod_slug;
 $cookie_form_action = str_replace('//', '/', $cookie_form_action);
 
-if(is_numeric($_COOKIE['cookie_consent'])) {
-	$cookie_box = '';
-} else {
-	$cookie_box = '<div class="cookie-box">';
-	$cookie_box .= '<p class="mb-0">'.$cookie_banner_intro.'</p>';
-	if($get_cookies_prefs['url_privacy_policy'] != '') {
-		$cookie_box .= '<p class="mb-0"><a href="'.$get_cookies_prefs['url_privacy_policy'].'">'.$cookies_lang['label_more_info'].' '.$get_cookies_prefs['url_privacy_policy'].'</a></p>';
-	}
-	
-	$cookie_box .= '<form action="'.$cookie_form_action.'" method="POST">';
-	$cookie_box .= $cookie_table;
-	$cookie_box .= '<div class="cookie-box-actions d-flex">';
-	$cookie_box .= '<button type="submit" class="btn btn-success btn-sm w-100 mr-1" name="cookies_accept_all">'.$cookies_lang['btn_accept_all'].'</button>';
-	$cookie_box .= '<button type="submit" class="btn btn-outline-success btn-sm" name="cookies_save">'.$cookies_lang['btn_save'].'</button> ';
-	$cookie_box .= '</div>';
-	$cookie_box .= '</form>';
-	$cookie_box .= '</div>';	
-}
 
+
+$cookie_alert = str_replace('{cookie_banner_intro}', $cookie_banner_intro, $cookie_alert);
+$cookie_alert = str_replace('{cookie_lifetime}', $cookie_lifetime, $cookie_alert);
+$privacy_link = '';
+if($get_cookies_prefs['url_privacy_policy'] != '') {
+	$privacy_link .= '<p class="mb-0"><a href="'.$get_cookies_prefs['url_privacy_policy'].'">'.$cookies_lang['label_more_info'].' '.$get_cookies_prefs['url_privacy_policy'].'</a></p>';
+}
+$cookie_alert = str_replace('{url_privacy_policy}', $privacy_link, $cookie_alert);
+$cookie_alert = str_replace('{cookie_list}', $cookie_table, $cookie_alert);
+$cookie_alert = str_replace('{btn_accept_all}', $cookies_lang['btn_accept_all'], $cookie_alert);
+$cookie_alert = str_replace('{btn_save}', $cookies_lang['btn_save'], $cookie_alert);
+	
+foreach($get_cookies as $k => $v) {
+	$all_cookies .= '<input type="hidden" name="all_cookies[]" value="'.$get_cookies[$k]['hash'].'">';
+}
+$cookie_alert = str_replace('{cookies_list_all}', $all_cookies, $cookie_alert);
+	
 
 $cookie_codes = cookies_get_code_injections();
 
@@ -122,6 +114,6 @@ foreach($get_cookies as $k => $v) {
 
 /* fire to template */
 $append_head_code .= $cookie_styles.$cookies_head_code;
-$append_body_code .= $cookie_box.$cookies_body_code.$cookie_script;
+$append_body_code .= $cookie_alert.$cookies_body_code.$cookie_script;
 
 ?>
