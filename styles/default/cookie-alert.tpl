@@ -1,4 +1,4 @@
-<div class="cookie-box">
+<div class="cookie-box cookie-box-hide">
 	<a href="#" id="toggleCookies">Cookies</a>
 	<div class="cookie-box-inner">
 		<p class="mb-0">{cookie_banner_intro}</p>
