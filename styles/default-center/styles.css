@@ -9,7 +9,7 @@
 	
 	visibility: visible;
 	opacity: 1;
-	
+	z-index: 99;
 	transition: all 0.5s;
 }
 
@@ -58,6 +58,7 @@
 	border: 1px solid #ddd;
 	
 	width: 550px;
+	max-width: 95%;
 }
 
 div.cookie-box-actions {
