@@ -1,6 +1,9 @@
 <script>
-		
-		$("#toggleCookies").click(function() {
+
+	$(document).ready(function(){
+
+	
+		$(".toggleCookies, #toggleCookies").click(function() {
 			$( "div.cookie-box" ).removeClass( "cookie-box-hide" );
 			$( "#toggleCookies" ).addClass( "toggle-hide" );
 			$( "#toggleCookies" ).removeClass( "toggle-show" );
@@ -22,8 +25,7 @@
 		    }
 		    return unescape(cookie.substring(begin + prefix.length, end));
 		}
-				
-    $(document).ready(function(){
+
 	    
 	    var cookie_consent = getCookie("cookie_consent");
 	    
