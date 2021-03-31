@@ -7,7 +7,7 @@ With this addon you can display a cookie consent banner on your website.
 
 1. Download the latest Version from flatCore.org or github.com
 2. Unzip the file and upload the folder __cookies.mod__ into the directory *modules*.
-3. Open the Backend and go to the Addons Section. The installation will run automatic if you open publisher for the first time
+3. Open the Backend and go to the Addons Section. The installation will run automatic if you open cookies.mod for the first time
 
 #### Preferences
 
@@ -39,7 +39,7 @@ Now there are four input fields for code
 
 #### Requirement
 
-* flatCore Version 1.5.3
+* flatCore Version > 2.0 (1.5.3 should still work, but is no longer tested)
 * Your Theme must support `$append_head_code` and `$append_body_code`
 
 
