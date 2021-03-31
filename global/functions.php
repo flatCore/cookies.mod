@@ -61,9 +61,8 @@ function cookies_get_entries() {
 	
 	
 	$dbh = null;
-	
+
 	return $entries;
-	
 }
 
 
@@ -85,20 +84,36 @@ function cookies_get_entry_data($id) {
 	
 	$cookie = $sth->fetch(PDO::FETCH_ASSOC);
 	$dbh = null;
+	
 	return $cookie;
-	
-	
 }
 
 /* frontend - list active cookies */
 
 
 function cookies_print_table($get_cookies) {
+	
+	global $get_cookies_prefs;
+	
 	$cnt_cookies = count($get_cookies);
+	$cookie_styles_dir = $get_cookies_prefs['cookie_styles'];
+	
+	
+	if(is_file('modules/cookies.mod/styles/'.$cookie_styles_dir.'/cookies-list-item.tpl')) {
+		$tpl_cookies_list_item = file_get_contents('modules/cookies.mod/styles/'.$cookie_styles_dir.'/cookies-list-item.tpl');
+	} else {
+		$tpl_cookies_list_item = file_get_contents('modules/cookies.mod/styles/default/cookies-list-item.tpl');
+	}
+
+	if(is_file('modules/cookies.mod/styles/'.$cookie_styles_dir.'/cookies-list-item-collapse.tpl')) {
+		$tpl_cookies_list_item_collapse = file_get_contents('modules/cookies.mod/styles/'.$cookie_styles_dir.'/cookies-list-item-collapse.tpl');
+	} else {
+		$tpl_cookies_list_item_collapse = file_get_contents('modules/cookies.mod/styles/default/cookies-list-item-collapse.tpl');
+	}
 	
 	$cookie_table = '<table class="table table-sm">';
 	for($i=0;$i<$cnt_cookies;$i++) {
-
+		
 		$checked = '';
 		$disabled = '';
 					
@@ -106,30 +121,35 @@ function cookies_print_table($get_cookies) {
 			$checked = 'checked';
 			$disabled = 'disabled';
 		}
+		
+		$this_item = $tpl_cookies_list_item;
 				
 		
 		$collapse = '';
 		if($get_cookies[$i]['text'] != '') {
-			$collapse  = '<a class="" data-toggle="collapse" href="#cookiCollapse'.$i.'" role="button" aria-expanded="false" aria-controls="collapseExample">[?]</a>';
-			$collapse .= '<div class="collapse pt-2" id="cookiCollapse'.$i.'">';
-			$collapse .= $get_cookies[$i]['text'];
-			$collapse .= '</div>';
+			$collapse = $tpl_cookies_list_item_collapse;
+			$collapse = str_replace('{cookie_text}', $get_cookies[$i]['text'], $collapse);
+			$collapse = str_replace('{cookie_id}', $i, $collapse);
 		}
 		
 		if(isset($_COOKIE[$get_cookies[$i]['hash']])) {
 			$checked = 'checked';
 		}
 		
-		$cookie_table .= '<tr>';
-		$cookie_table .= '<td><strong>'.$get_cookies[$i]['title'].'</strong><br>'.$get_cookies[$i]['teaser'].' '.$collapse.'</td>';
-		$cookie_table .= '<td><input type="checkbox" name="set_cookies[]" value="'.$get_cookies[$i]['hash'].'" class="cookie_switch" id="switch'.$i.'" '.$checked.' '.$disabled.'><label for="switch'.$i.'">Toggle</label></td>';
-		$cookie_table .= '</tr>';
+		
+		$this_item = str_replace('{cookie_title}', $get_cookies[$i]['title'], $this_item);
+		$this_item = str_replace('{cookie_teaser}', $get_cookies[$i]['teaser'], $this_item);
+		$this_item = str_replace('{cookie_hash}', $get_cookies[$i]['hash'], $this_item);
+		$this_item = str_replace('{cookie_collapse}', $collapse, $this_item);
+		$this_item = str_replace('{cookie_id}', $i, $this_item);
+		$this_item = str_replace('{checked}', $checked, $this_item);
+		$this_item = str_replace('{disabled}', $disabled, $this_item);
+		$cookie_table .= $this_item;
 		
 	}
 	$cookie_table .= '</table>';
 	
 	return $cookie_table;
-
 }
 
 
@@ -149,7 +169,6 @@ function cookies_get_code_injections() {
 	$dbh = null;	
 	
 	return $entries;
-	
 }
 
 
@@ -174,10 +193,7 @@ function cookies_get_preferences() {
 	$prefs = $prefs->fetch(PDO::FETCH_ASSOC);
 	$dbh = null;
 	
-	
-	
 	return $prefs;
-	
 }
 
 
