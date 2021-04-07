@@ -314,8 +314,8 @@ echo '<div class="card">';
 echo '<div class="card-header">';
 
 echo '<ul class="nav nav-tabs card-header-tabs" role="tablist">';
-echo '<li class="nav-item"><a class="nav-link active" data-target="#code_head" data-toggle="tab" href="#" role="tab">Code &lt;head&gt;</a></li>';
-echo '<li class="nav-item"><a class="nav-link" data-target="#code_body" data-toggle="tab" href="#" role="tab">Code &lt;body&gt;</a></li>';
+echo '<li class="nav-item"><a class="nav-link active" data-bs-target="#code_head" data-bs-toggle="tab" href="#" role="tab">Code &lt;head&gt;</a></li>';
+echo '<li class="nav-item"><a class="nav-link" data-bs-target="#code_body" data-bs-toggle="tab" href="#" role="tab">Code &lt;body&gt;</a></li>';
 
 echo '</div>';
 echo '<div class="card-body">';
@@ -352,8 +352,8 @@ echo '<div class="card">';
 echo '<div class="card-header">';
 
 echo '<ul class="nav nav-tabs card-header-tabs" role="tablist">';
-echo '<li class="nav-item"><a class="nav-link active" data-target="#code_head_default" data-toggle="tab" href="#" role="tab">Code &lt;head&gt;</a></li>';
-echo '<li class="nav-item"><a class="nav-link" data-target="#code_body_default" data-toggle="tab" href="#" role="tab">Code &lt;body&gt;</a></li>';
+echo '<li class="nav-item"><a class="nav-link active" data-bs-target="#code_head_default" data-bs-toggle="tab" href="#" role="tab">Code &lt;head&gt;</a></li>';
+echo '<li class="nav-item"><a class="nav-link" data-bs-target="#code_body_default" data-bs-toggle="tab" href="#" role="tab">Code &lt;body&gt;</a></li>';
 
 echo '</div>';
 echo '<div class="card-body">';
